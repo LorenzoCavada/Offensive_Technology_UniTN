@@ -1,0 +1,5 @@
+
+NWworkstation1 eth4 <- is "wired" to -> NWrouter eth4
+NWrouter eth2 <- is "wired" to -> ISrouter eth0
+ISrouter eth2 <- is "wired" to -> SWrouter eth4
+SWworkstation1 eth1 <- is "wired" to -> SWrouter eth0

@@ -1,0 +1,42 @@
+--- orig_webserver.c	2021-10-12 12:46:26.324952000 +0200
++++ webserver.c	2021-10-14 09:43:29.508859801 +0200
+@@ -84,12 +84,16 @@
+ 	if (hdrptr = strstr(req->headers, searchstr)) { 
+ 		hdrptr += strlen(searchstr); 
+ 		if (hdrend = strstr(hdrptr, "\r\n")) { 
+-			char hdrval[1024]; // temporary return value
+-			memcpy((char *)hdrval, hdrptr, (hdrend - hdrptr));
+-			hdrval[hdrend - hdrptr] = '\0'; // tack null onto end of header value
+-			int hdrvallen = strlen(hdrval);
+-			retval = (char *)malloc((hdrvallen + 1) * sizeof(char)); // malloc a space for retval
+-			strcpy(retval, (char *)hdrval);
++			if(strlen(hdrptr) < 512){
++				char hdrval[1024]; // temporary return value
++				memcpy((char *)hdrval, hdrptr, (hdrend - hdrptr));
++				hdrval[hdrend - hdrptr] = '\0'; // tack null onto end of header value
++				int hdrvallen = strlen(hdrval);
++				retval = (char *)malloc((hdrvallen + 1) * sizeof(char)); // malloc a space for retval
++				strcpy(retval, (char *)hdrval);
++			}else{
++				printf("BUFFER OVERFLOW DETECTED\n");
++			}
+ 		} else {
+ 			retval = (char *)malloc((strlen(hdrptr) + 1) * sizeof(char)); //
+ 			strcpy(retval, hdrptr);
+@@ -212,10 +216,15 @@
+ 
+ int send_response(int sockfd, httpreq_t *req, int statcode) {
+ 	int urifd;
+-	const int BUFSIZE = 1024;
++	const int BUFSIZE = 8192;
+ 	char sendmessage[BUFSIZE];
+ 	char *path = req->uri;
+ 
++	if(strlen(path) > 4096){
++		printf("BUFFER OVERFLOW DETECTED\n");
++		return 0;
++	}
++
+ 	if (req->uri == NULL || req->method == NULL || 
+ 		req->headers == NULL || req->version == NULL) {
+ 		return 0;

@@ -1,0 +1,15 @@
+Port Forwarding
+	ssh -L 8118:server.pathname-cvd.offtech:80 otech2ak@users.deterlab.net
+	
+REMOVE SUID
+	chmod u-s /usr/lib/cgi-bin/memo.cgi
+	
+Commonly noted as SUID, the special permission for the user access level has a single function: A file with SUID always executes as the user who owns the file, regardless of the user passing the command. If the file owner doesn't have execute permissions, then use an uppercase S here.
+
+
+APPLY PATCH
+	patch oldcode.c -i fixed.patch -o new-patched-file.c
+
+
+/home/username/memo/file
+/root/memo/...

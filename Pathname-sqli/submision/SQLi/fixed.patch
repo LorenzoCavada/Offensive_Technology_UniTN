@@ -1,0 +1,191 @@
+--- FCCU.php	2021-10-07 09:01:31.572505535 +0200
++++ FCCU_FIX.php	2021-10-05 22:05:57.310000000 +0200
+@@ -32,9 +32,16 @@
+ 	$password = $PARAM['password'];
+ 
+         $mysqli = new mysqli($dbhost, $dbuser, $dbpass, $dbname);	
++	
++	/*Create the statement*/
++	$stmt = $mysqli->prepare("SELECT * FROM accounts WHERE id = ? AND password = ?");
++	/*Bind the value*/
++	$stmt->bind_param("si", $id, $password); 
++	/*execute the statement*/
++	$stmt->execute();
++	$result = $stmt->get_result();
+ 	$query = "SELECT * FROM accounts WHERE id = $id AND password = '$password'";
+ 	debug($query);
+-	$result = $mysqli->query($query) or die($mysqli->error());
+ 	$row =  $result->fetch_array(); // there should be only one row
+ 	
+ 	if (!$row) { // auth failure
+@@ -70,9 +77,16 @@
+ 		// normal output
+ 		
+ 		// account info
++		/*Create the statement*/
++		$stmt = $mysqli->prepare("SELECT * FROM accounts WHERE id = ? AND password = ?");
++		/*Bind the value*/
++		$stmt->bind_param("si", $id, $password); 
++		/*execute the statement*/
++		$stmt->execute();
++		$result = $stmt->get_result();
++		/*leaving this for debug */
+ 		$query = "SELECT * FROM accounts WHERE id = $id AND password = '$password'";
+-                $result = $mysqli->query($query) or die($mysqli->error());
+-                 $row = $result->fetch_array(); // there should be only one row
++		$row = $result->fetch_array(); // there should be only one row
+ 		account_info($row);
+ 	
+ 		// get current account list by name
+@@ -91,8 +105,16 @@
+ 	global $dbhost, $dbuser, $dbpass, $dbname;
+ 	$splitname = explode(", ", $name);
+ 
+-        $mysqli = new mysqli($dbhost, $dbuser, $dbpass, $dbname);
+-        $query = "SELECT id FROM accounts WHERE first = '$splitname[1]' AND last = '$splitname[0]'";
++	$mysqli = new mysqli($dbhost, $dbuser, $dbpass, $dbname);
++	/*Create the statement*/
++	$stmt = $mysqli->prepare("SELECT bal FROM accounts WHERE password = ? AND id = ?");
++	/*Bind the value*/
++	$stmt->bind_param("si", $password, $id); 
++	/*execute the statement*/
++	$stmt->execute();
++	$result = $stmt->get_result();
++	/*leaving this for debug */
++	$query = "SELECT id FROM accounts WHERE first = '$splitname[1]' AND last = '$splitname[0]'";
+ 
+ 	$result = $mysqli->query($query) or die($mysqli->error());
+ 	$row = $result->fetch_array();
+@@ -122,9 +144,15 @@
+ 	$amount = floor($amount);
+ 	
+ 	$mysqli = new mysqli($dbhost, $dbuser, $dbpass, $dbname);
+-	
++	/*Create the statement*/
++	$stmt = $mysqli->prepare("SELECT bal FROM accounts WHERE password = ? AND id = ?");
++	/*Bind the value*/
++	$stmt->bind_param("si", $password, $id); 
++	/*execute the statement*/
++	$stmt->execute();
++	$result = $stmt->get_result();
++	/*leaving this for debug */
+ 	$query = "SELECT bal FROM accounts WHERE password = '$password' AND id = $id";
+-	$result = $mysqli->query($query) or die ($mysqli->error());
+ 	
+ 	$row = $result->fetch_array();
+ 	$giver_has = $row[0];
+@@ -132,8 +160,15 @@
+ 	if ($amount > 0 && $giver_has >= $amount) {
+ 		$giver_has = $giver_has - $amount; // there's a problem here but it's not SQL Injection...
+ 		pretend("withdraw cash", $amount);
++		/*Create the statement*/
++		$stmt = $mysqli->prepare("UPDATE accounts SET bal = ? WHERE password = ? AND id = ? LIMIT 1");
++		/*Bind the value*/
++		$stmt->bind_param("isi", $giver_has, $password, $id); 
++		/*execute the statement*/
++		$stmt->execute();
++		/*leaving this for debug */
+ 		$query = "UPDATE accounts SET bal = $giver_has WHERE password = '$password' AND id = $id LIMIT 1";
+-		$mysqli->query($query) or die($mysqli->error());
++		debug($query);
+ 		echo "<h2 align='center'>Cash withdrawal of $$amount complete.</h2>
+ 		      <h3 align='center'>Your cash should be ready in accounting within 45 minutes.</h3>\n";
+ 	} else {
+@@ -150,10 +185,16 @@
+ 	$amount = floor($amount);
+ 	
+ 	$mysqli = new mysqli($dbhost, $dbuser, $dbpass, $dbname);
+-	
++	/*Create the statement*/
++	$stmt = $mysqli->prepare("SELECT bal FROM accounts WHERE password = ? AND id = ?");
++	/*Bind the value*/
++	$stmt->bind_param("si", $password, $id); 
++	/*execute the statement*/
++	$stmt->execute();
++	$result = $stmt->get_result();
++	/*leaving this for debug */
+ 	$query = "SELECT bal FROM accounts WHERE password = '$password' AND id = $id";
+ 	debug($query);
+-	$result = $mysqli->query($query) or die($mysqli->error());
+ 	
+ 	$row = $result->fetch_array();
+ 	$giver_has = $row[0];
+@@ -161,9 +202,15 @@
+ 	if ($amount > 0 && $giver_has >= $amount && $bank && $account) {
+ 		$giver_has = $giver_has - $amount; // there's a problem here but it's not SQL Injection...
+ 		pretend("wire money", $amount, $bank, $acct);
++		/*Create the statement*/
++		$stmt = $mysqli->prepare("UPDATE accounts SET bal = ? WHERE password = ? AND id = ? LIMIT 1");
++		/*Bind the value*/
++		$stmt->bind_param("isi", $giver_has, $password, $id); 
++		/*execute the statement*/
++		$stmt->execute();
++		/*leaving this for debug */
+ 		$query = "UPDATE accounts SET bal = $giver_has WHERE password = '$password' AND id = $id LIMIT 1";
+ 		debug($query);
+-		$mysqli->query($query) or die($mysqli->error());
+ 		echo "<h2 align='center'>Wire of $$amount to bank ($bank) account ($account) complete.</h2>\n";
+ 	} else {
+ 		action_error("Problem with wire fund transfer!", 
+@@ -184,17 +231,29 @@
+ 	$recipient_id = name_to_id($recipient);
+ 	
+ 	$mysqli = new mysqli($dbhost, $dbuser, $dbpass, $dbname);
+-	
++	/*Create the statement*/
++	$stmt = $mysqli->prepare("SELECT bal FROM accounts WHERE id = ?");
++	/*Bind the value*/
++	$stmt->bind_param("i", $giver_id); 
++	/*execute the statement*/
++	$stmt->execute();
++	$result = $stmt->get_result();
++	/*leaving this for debug */
+ 	$query = "SELECT bal FROM accounts WHERE id = $giver_id";
+ 	debug($query);
+-	$result = $mysqli->query($query) or die($mysqli->error());
+ 	$row = $result->fetch_array();
+ 	$giver_has = $row[0];
+ 
+-
++	/*Create the statement*/
++	$stmt = $mysqli->prepare("SELECT bal FROM accounts WHERE id = ?");
++	/*Bind the value*/
++	$stmt->bind_param("i", $recipient_id); 
++	/*execute the statement*/
++	$stmt->execute();
++	$result = $stmt->get_result();
++	/*leaving this for debug */
+ 	$query = "SELECT bal FROM accounts WHERE id = $recipient_id";
+ 	debug($query);
+-	$result = $mysqli->query($query) or die($mysqli->error());
+ 	$row = $result->fetch_array();
+ 	$recipient_has = $row[0];
+ 	
+@@ -203,12 +262,25 @@
+ 	if ($amount > 0 && $giver_has >= $amount) {
+ 		$giver_has = $giver_has - $amount; // there's a problem here but it's not SQL Injection...
+ 		$recipient_has = $recipient_has + $amount;
++		/*Create the statement*/
++		$stmt = $mysqli->prepare("UPDATE accounts SET bal = ? WHERE id = ? LIMIT 1");
++		/*Bind the value*/
++		$stmt->bind_param("ii", $recipient_has, $recipient_id); 
++		/*execute the statement*/
++		$stmt->execute();
++		/*leaving this for debug */
+ 		$query = "UPDATE accounts SET bal = $recipient_has WHERE id = $recipient_id LIMIT 1";
+ 		debug($query);
+-		$mysqli->query($query) or die($mysqli->error());
++		
++		/*Create the statement*/
++		$stmt = $mysqli->prepare("UPDATE accounts SET bal = $giver_has WHERE password = '$password' AND id = $giver_id LIMIT 1");
++		/*Bind the value*/
++		$stmt->bind_param("isi", $giver_has, $password, $id); 
++		/*execute the statement*/
++		$stmt->execute();
++		/*leaving this for debug */
+ 		$query = "UPDATE accounts SET bal = $giver_has WHERE password = '$password' AND id = $giver_id LIMIT 1";
+ 		debug($query);
+-		$mysqli->query($query) or die($mysqli->error()); // does anyone know what it is?
+ 		echo "<h2 align='center'>Transfer of $$amount to $recipient complete.</h2>\n";
+ 	} else {
+ 		action_error("Problem with employee fund transfer!",

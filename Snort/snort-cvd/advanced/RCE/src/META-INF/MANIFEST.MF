@@ -1,0 +1,2 @@
+Main-Class: FileServer
+Class-Path: FileServer.jar

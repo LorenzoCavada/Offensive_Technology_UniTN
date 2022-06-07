@@ -1,0 +1,24 @@
+set ns [new Simulator]
+source tb_compat.tcl
+
+#Create the topology nodes
+set proggroup [$ns event-group]
+foreach node {client server attacker router} { 
+   #Create new node 
+   set $node [$ns node]  
+   #Define the OS image
+   tb-set-node-os [set $node] Ubuntu-EDU
+}
+
+set lan1 [$ns make-lan "$client $attacker $router" 1000Mb 0ms]
+set link1 [$ns duplex-link $server $router 1000Mb 0ms DropTail]
+
+tb-set-ip $client 1.1.2.3
+tb-set-ip $attacker 1.1.2.4
+tb-set-ip $server 5.6.7.8
+
+$ns rtproto Manual
+$client add-route $server $router
+$attacker add-route $server $router
+$server add-route $lan1 $router
+$ns run

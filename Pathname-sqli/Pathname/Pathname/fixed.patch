@@ -1,0 +1,74 @@
+5a6
+> use Cwd 'abs_path';
+102,106c103,139
+< 	my $author = "root";
+< 	my @stat = stat $memo;
+< 	my $date = localtime $stat[9];
+< 	if ($memo =~ m#^/home/([^/]+)/.*$#) {
+< 		$author = $1;
+---
+> 	$memo = abs_path($memo);
+> 	if(defined $memo){
+> 		if ($memo =~ /\/home\/(?s).*\/memo\/|\/root\/memo\/(?s).*\//) {
+> 			my $author = "root";
+> 			my @stat = stat $memo;
+> 			my $date = localtime $stat[9];
+> 			if ($memo =~ m#^/home/([^/]+)/.*$#) {
+> 				$author = $1;
+> 			}
+> 			print "<hr>\n";
+> 			print "<blockquote>";
+> 			print '<table border=1><tr><td>';
+> 			print "<center><b>$labels{$memo}</b></center>";
+> 			print '</td></tr>';
+> 			print "<tr><td>\n<p>";
+> 			print "<b>Author:</b> $author<br />\n";
+> 			print "<b>Subject:</b> $labels{$memo}<br />";
+> 			print "<b>Date:</b> $date<br />\n";
+> 			print "\n</p></td></tr>\n";
+> 			print "<tr><td><p>&nbsp;</p>\n";
+> 			print "<blockquote><p>\n";
+> 			
+> 			open (MEMO, $memo); # open the memo file
+> 			
+> 			my $line;
+> 			foreach $line (<MEMO>) {
+> 				# for every line in the memo, print it out
+> 				$line =~ s#\n$#</p><p>#; # replace newline characters with HTML
+> 				print "$line\n";
+> 			}
+> 			print "</p></blockquote>\n";
+> 			print '<p>&nbsp;</p></td></tr></table>';
+> 			print "</blockquote>";
+> 			print "<hr>\n";
+> 		}
+> 	}else{
+> 		print '<p>Trying to access protected resource</p>';
+108,132c141
+< 	print "<hr>\n";
+< 	print "<blockquote>";
+< 	print '<table border=1><tr><td>';
+< 	print "<center><b>$labels{$memo}</b></center>";
+< 	print '</td></tr>';
+< 	print "<tr><td>\n<p>";
+< 	print "<b>Author:</b> $author<br />\n";
+< 	print "<b>Subject:</b> $labels{$memo}<br />";
+< 	print "<b>Date:</b> $date<br />\n";
+< 	print "\n</p></td></tr>\n";
+< 	print "<tr><td><p>&nbsp;</p>\n";
+< 	print "<blockquote><p>\n";
+< 	
+< 	open (MEMO, $memo); # open the memo file
+< 	
+< 	my $line;
+< 	foreach $line (<MEMO>) {
+< 		# for every line in the memo, print it out
+< 		$line =~ s#\n$#</p><p>#; # replace newline characters with HTML
+< 		print "$line\n";
+< 	}
+< 	print "</p></blockquote>\n";
+< 	print '<p>&nbsp;</p></td></tr></table>';
+< 	print "</blockquote>";
+< 	print "<hr>\n";
+---
+> 
