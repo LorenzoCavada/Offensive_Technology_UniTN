@@ -20,12 +20,12 @@ The application is listening on port `7777`. The server receive TCP request from
 
 Graph showing the packet rate over time obtained by sniffing from the Snort machine snort is not running.
 
-![Without snort](https://github.com/LorenzoCavada/snort-cvd/blob/main/images/Exercise4a.png)
+![Without snort](./images/Exercise4a.png)
 
     
 Graph showing the packet rate over time obtained by sniffing from the Snort machine snort is running.
 
-![With snort](https://github.com/LorenzoCavada/snort-cvd/blob/main/images/Exercise4b.png)
+![With snort](./images/Exercise4b.png)
 
 
 ### 5. What does the "-Q" option do in Snort?
@@ -75,12 +75,12 @@ This will start snort with the rules specified in `snort.config`.
 Graph showing the packet rate over time obtained by sniffing from the Snort machine on the interface connected with the router when no particular configuration is running.
 It is interesting to look at the TCP stream number 8 (`tcp.stream eq 8`), we can see how a request for a classified file is performed and completed by the outsider machine.
 
-![Without the configuration](https://github.com/LorenzoCavada/snort-cvd/blob/main/images/Exercise9a.png)
+![Without the configuration](./images/Exercise9a.png)
 
 Graph showing the packet rate over time obtained by sniffing from the Snort machine on the interface connected with the router when the configuration made for preventing the leak of classified information is running.
 It is interesting to look at the TCP stream number 5 (`tcp.stream eq 5`), we can see see how the request for a classified file is performed by the outsider but rejected by the snort machine.
 
-![With the configuration](https://github.com/LorenzoCavada/snort-cvd/blob/main/images/Exercise9b.png)
+![With the configuration](./images/Exercise9b.png)
 
 This analysis show how the snort rule are running as expected, blocking the request for the `.xml` file and the request from the `outsider` for the classified file.
 
@@ -103,22 +103,22 @@ The snort configuration against this attack can be found in `./intermediate/snor
 
 Graph showing the packet rate over time obtained by sniffing from the Router machine on the interface connected with the Snort machine when only the basic configuration is running and the client is performing the attack.
 
-![Router with basic configuration during the attack](https://github.com/LorenzoCavada/snort-cvd/blob/main/images/Exercise11a.png)
+![Router with basic configuration during the attack](./images/Exercise11a.png)
 
 
 Graph showing the packet rate over time obtained by sniffing from the Server machine on the interface connected with the Snort machine when only the basic configuration is running and the client is performing the attack.
 
-![Server with basic configuration during the attack](https://github.com/LorenzoCavada/snort-cvd/blob/main/images/Exercise11b.png)
+![Server with basic configuration during the attack](./images/Exercise11b.png)
 
 
 Graph showing the packet rate over time obtained by sniffing from the Router machine on the interface connected with the Snort machine when only the basic configuration is running and the client is not performing the attack.
 
-![Router with basic configuration without the attack](https://github.com/LorenzoCavada/snort-cvd/blob/main/images/Exercise11c.png)
+![Router with basic configuration without the attack](./images/Exercise11c.png)
 
 
 Graph showing the packet rate over time obtained by sniffing from the Server machine on the interface connected with the Snort machine when only the basic configuration is running and the client is not performing the attack.
 
-![Server with basic configuration without the attack](https://github.com/LorenzoCavada/snort-cvd/blob/main/images/Exercise11d.png)
+![Server with basic configuration without the attack](./images/Exercise11d.png)
 
 ### 12. Repeat the previous step but now with the rate filtering rules enabled.
 
@@ -132,20 +132,20 @@ The rules used to apply the `rate_filter` to the traffic are the following:
 
 Graph showing the packet rate over time obtained by sniffing from the Router machine on the interface connected with the Snort machine when the rate filtering configuration is running and the client is performing the attack.
 
-![Router with rate filtering configuration during the attack](https://github.com/LorenzoCavada/snort-cvd/blob/main/images/Exercise12a.png)
+![Router with rate filtering configuration during the attack](./images/Exercise12a.png)
 
 Graph showing the packet rate over time obtained by sniffing from the Server machine on the interface connected with the Snort machine when the rate filtering configuration is running and the client is performing the attack.
 
-![Server with rate filtering configuration during the attack](https://github.com/LorenzoCavada/snort-cvd/blob/main/images/Exercise12b.png)
+![Server with rate filtering configuration during the attack](./images/Exercise12b.png)
 
 
 Graph showing the packet rate over time obtained by sniffing from the Router machine on the interface connected with the Snort machine when the rate filtering configuration is running and the client is not performing the attack.
 
-![Router with rate filtering configuration without the attack](https://github.com/LorenzoCavada/snort-cvd/blob/main/images/Exercise12c.png)
+![Router with rate filtering configuration without the attack](./images/Exercise12c.png)
 
 Graph showing the packet rate over time obtained by sniffing from the Server machine on the interface connected with the Snort machine when the rate filtering configuration is running and the client is not performing the attack.
 
-![Server with rate filtering configuration without the attack](https://github.com/LorenzoCavada/snort-cvd/blob/main/images/Exercise12d.png)
+![Server with rate filtering configuration without the attack](./images/Exercise12d.png)
 
 ### 13. For a DOS attack should rate filtering rules be paired with event filtering rules?
 
@@ -160,20 +160,20 @@ Using the drop options should be the best practice because responding does not h
 
 Graph showing the packet rate over time obtained by sniffing from the Router machine on the interface connected with the Snort machine when the rate filtering configuration is running, the interface is forced and the client is performing the attack.
 
-![Router with rate filtering configuration, the interface is forced and during the attack](https://github.com/LorenzoCavada/snort-cvd/blob/main/images/Exercise15a.png)
+![Router with rate filtering configuration, the interface is forced and during the attack](./images/Exercise15a.png)
 
 Graph showing the packet rate over time obtained by sniffing from the Server machine on the interface connected with the Snort machine when the rate filtering configuration is running, the interface is forced and the client is performing the attack.
 
-![Server with rate filtering configuration, the interface is forced and during the attack](https://github.com/LorenzoCavada/snort-cvd/blob/main/images/Exercise15b.png)
+![Server with rate filtering configuration, the interface is forced and during the attack](./images/Exercise15b.png)
 
 
 Graph showing the packet rate over time obtained by sniffing from the Router machine on the interface connected with the Snort machine when the rate filtering configuration is running, the interface is forced and the client is not performing the attack.
 
-![Router with rate filtering configuration, the interface is forced and without the attack](https://github.com/LorenzoCavada/snort-cvd/blob/main/images/Exercise15c.png)
+![Router with rate filtering configuration, the interface is forced and without the attack](./images/Exercise15c.png)
 
 Graph showing the packet rate over time obtained by sniffing from the Server machine on the interface connected with the Snort machine when the rate filtering configuration is running, the interface is forced and the client is not performing the attack.
 
-![Server with rate filtering configuration, the interface is forced and without the attack](https://github.com/LorenzoCavada/snort-cvd/blob/main/images/Exercise15d.png)
+![Server with rate filtering configuration, the interface is forced and without the attack](./images/Exercise15d.png)
 
 ### 16. Are there any changes you can make outside of Snort to help guard against this attack? If so what are they?
 
