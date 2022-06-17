@@ -1,4 +1,4 @@
-# Offensive Technology UnitTN
+# Offensive Technology UniTN
 
 This repository contains all the exercises I have completed during the Offensive Technology course 2021/2022 helded by Fabio Massacci and Giorgio Di Tizio at the University of Trento.  
 All the materials here have been produced exclusively by myself except for the [Snort](https://github.com/LorenzoCavada/Offensive_Technology_UnitTN/tree/main/Snort) exercise that has been produced in collaboration with Tommaso Sacchetti.
